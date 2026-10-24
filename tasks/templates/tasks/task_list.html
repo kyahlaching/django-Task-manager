@@ -1,0 +1,43 @@
+
+{% extends "tasks/base.html" %}
+
+{% block title %}All Tasks{% endblock %}
+
+{% block content %}
+<h1 class="mb-3">My Tasks</h1>
+
+<form method="get" class="mb-4 d-flex gap-2">
+    <select name="status" class="form-select" style="max-width:250px">
+        <option value="">All statuses</option>
+        {% for value, label in task_status_choices %}
+        <option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+        <option value="Pending" {% if selected_status == "Pending" %}selected{% endif %}>Pending</option>
+        <option value="In Progress" {% if selected_status == "In Progress" %}selected{% endif %}>In Progress</option>
+        <option value="Completed" {% if selected_status == "Completed" %}selected{% endif %}>Completed</option>
+    </select>
+    <button class="btn btn-primary">Filter</button>
+    <a class="btn btn-outline-secondary" href="{% url 'task_list' %}">Reset</a>
+</form>
+
+{% for task in tasks %}
+<div class="card mb-3 {% if task.due_date < today and task.status != 'Completed' %}border-danger{% endif %}">
+    <div class="card-body">
+        <h5>
+            <a href="{% url 'task_detail' task.pk %}">{{ task.title }}</a>
+        </h5>
+        <p class="mb-1">Status: <strong>{{ task.status }}</strong></p>
+        <p class="mb-2">Due: {{ task.due_date }}</p>
+
+        {% if task.due_date < today and task.status != "Completed" %}
+        <span class="badge bg-danger">Overdue</span>
+        {% endif %}
+
+        <a class="btn btn-sm btn-outline-primary" href="{% url 'task_update' task.pk %}">Edit</a>
+        <a class="btn btn-sm btn-outline-danger" href="{% url 'task_delete' task.pk %}">Delete</a>
+    </div>
+</div>
+{% empty %}
+<p>No tasks found. Create your first task!</p>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,21 @@
+
+{% extends "tasks/base.html" %}
+
+{% block title %}{{ task.title }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <h1>{{ task.title }}</h1>
+        <p><strong>Description:</strong></p>
+        <p>{{ task.description|default:"No description provided."|linebreaksbr }}</p>
+        <p><strong>Status:</strong> {{ task.status }}</p>
+        <p><strong>Due date:</strong> {{ task.due_date }}</p>
+        <p><strong>Created:</strong> {{ task.created_at }}</p>
+
+        <a class="btn btn-primary" href="{% url 'task_update' task.pk %}">Edit Task</a>
+        <a class="btn btn-danger" href="{% url 'task_delete' task.pk %}">Delete Task</a>
+        <a class="btn btn-secondary" href="{% url 'task_list' %}">Back</a>
+    </div>
+</div>
+{% endblock %}
